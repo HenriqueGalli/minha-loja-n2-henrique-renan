@@ -20,7 +20,7 @@ export default function Home({ navigation }) {
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => {
-                        navigation.navigate('CadastroProdutos')
+                        navigation.navigate('ListarProdutos')
                     }}
                 >
                     <Text style={styles.buttonText}>Listar Produtos</Text>
@@ -36,12 +36,12 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF0F0',
+        backgroundColor: 'white',
         alignItems: 'center'
     },
     botao: {
         fontSize: 18,
-        backgroundColor: '#FF0000',
+        backgroundColor: '#2a9d8f',
         borderRadius: 5,
         marginTop: 30,
         color: 'black',
@@ -52,11 +52,11 @@ const styles = StyleSheet.create({
     },
     legenda: {
         fontSize: 32,
-        color: 'black',
+        color: '#e76f51',
         marginTop: 32
     },
     button: {
-        backgroundColor: 'red',
+        backgroundColor: '#f4a261',
         margin:30,
         paddingVertical: 20,
         paddingHorizontal: 30,

@@ -10,7 +10,7 @@ export default function CadastroProdutos({ navigation }) {
 
   const saveProduct = async () => {
     const produto = { code, descricao, preco }
-    
+
     try {
       if (code.length == 0 || descricao.length == 0 || preco.length == 0) {
         Alert.alert('Error', 'Preencha todos os campos')
@@ -29,11 +29,11 @@ export default function CadastroProdutos({ navigation }) {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-                navigation.navigate('Home')
-            }}>
-            <Text style={styles.buttonText}>Home</Text>
+          style={styles.button}
+          onPress={() => {
+            navigation.navigate('Home')
+          }}>
+          <Text style={styles.buttonText}>Cadastrar Novo Produto</Text>
         </TouchableOpacity>
 
         <Text style={styles.legenda}>Cadastro de Produto</Text>
@@ -57,16 +57,16 @@ export default function CadastroProdutos({ navigation }) {
           onChangeText={setPreco}
           style={styles.caixaTexto}
         />
-        
+
         <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                        saveProduct
-                    }}
-                >
-                    <Text style={styles.buttonText}>Cadastrar Novo Produto</Text>
-                </TouchableOpacity>
-    
+          style={styles.button}
+          onPress={() => {
+            saveProduct
+          }}
+        >
+          <Text style={styles.buttonText}>Cadastrar Novo Produto</Text>
+        </TouchableOpacity>
+
       </View>
     </ScrollView>
   );
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',     
+    alignItems: 'center',
   },
   container: {
     flex: 0.75,
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 16,
     justifyContent: 'center',
-    alignItems: 'center',    
+    alignItems: 'center',
     padding: 16,
   },
   botao: {
@@ -99,18 +99,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     borderWidth: 0,
-    borderBottomWidth:1,
+    borderBottomWidth: 1,
     paddingHorizontal: 20,
     height: 40
   },
   legenda: {
     fontSize: 20,
     color: 'black',
-    flex:0.5
-  }, 
+    flex: 0.5
+  },
   button: {
     backgroundColor: 'red',
-    margin:30,
+    margin: 30,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 15,

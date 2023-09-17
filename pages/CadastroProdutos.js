@@ -1,7 +1,7 @@
 
 import { StyleSheet, Text, TouchableOpacity, View, TextInput, Button, Alert, ScrollView } from 'react-native';
 import React, { useState } from 'react';
-import ProdutoDAO from './services/database/ProdutoDAO';
+import ProdutoDAO from '../services/database/ProdutoDAO';
 
 export default function CadastroProdutos({ navigation }) {
   const [code, setCode] = useState()
@@ -28,6 +28,14 @@ export default function CadastroProdutos({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+                navigation.navigate('Home')
+            }}>
+            <Text style={styles.buttonText}>Home</Text>
+        </TouchableOpacity>
+
         <Text style={styles.legenda}>Cadastro de Produto</Text>
         <TextInput
           placeholder="Código"

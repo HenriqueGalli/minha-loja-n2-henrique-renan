@@ -1,53 +1,87 @@
-import { enablePromise, openDatabase, SQLiteDatabase } from 'react-native-sqlite-storage';
+import * as SQLite from 'expo-sqlite';
 
-const tableName = 'produtos';
+export function getDbConnection() {
+  const db = SQLite.openDatabase('GCS.db');
+  return db;
+}
 
-enablePromise(true);
-
-export const getDBConnection = async () => {
-  return openDatabase({ name: 'produtos.db', location: 'default' });
+export async function createTable() {
+    createProduto();
 };
 
-export const createTable = async (db) => {
-  // create table if not exists
-  const query = `CREATE TABLE IF NOT EXISTS ${tableName}(
-        value TEXT NOT NULL
-    );`;
+export async function createProduto() {
+  return new Promise((resolve, reject) => {
+    const query = `CREATE TABLE IF NOT EXISTS products
+    (
+        id integer not null primary key,
+        nome text not null,
+        preco integer not null,
+        categoria text not null          
+    )`;
 
-  await db.executeSql(query);
+      let db = getDbConnection();        
+      
+      db.transaction(tx => {
+          tx.executeSql(query);
+          resolve(true); 
+      },
+          error => {
+              console.log(error);
+              resolve(false);
+          }
+      );
+  });
 };
 
-export const getProdutos = async (db) => {
-  try {
-    const produtos = [];
-    const results = await db.executeSql(`SELECT * FROM ${tableName}`);
-    results.forEach(result => {
-      for (let index = 0; index < result.rows.length; index++) {
-        produtos.push(result.rows.item(index))
-      }
-    });
-    return produtos;
-  } catch (error) {
-    console.error(error);
-    throw Error('Failed to get produtos !!!');
+export function getProduct() {
+
+  return new Promise((resolve, reject) => {
+
+      let dbCx = getDbConnection();
+      dbCx.transaction(tx => {
+          let query = 'select * from products';
+          tx.executeSql(query, [],
+              (tx, product) => {
+
+                  var retorno = []
+
+                  for (let n = 0; n < product.rows.length; n++) {
+                      let obj = {
+                          nome: product.rows.item(n).nome,
+                          preco: product.rows.item(n).preco,
+                          categoria: product.rows.item(n).categoria
+                      }
+                      retorno.push(obj);
+                  }
+                  resolve(retorno);
+              })
+      },
+          error => {
+              console.log(error);
+              resolve([]);
+          }
+      )
   }
-};
+  );
+}
 
-export const saveProdutos = async (db, todoItems) => {
-  const insertQuery =
-    `INSERT OR REPLACE INTO ${tableName}(rowid, value) values` +
-    todoItems.map(i => `(${i.id}, '${i.value}')`).join(',');
+export function addProduct(produto) {
 
-  return db.executeSql(insertQuery);
-};
+  return new Promise((resolve, reject) => {
+      let query = 'insert into products (nome, preco, categoria) values (?,?,?)';
+      let dbCx = getDbConnection();
 
-export const deleteTodoItem = async (db, id) => {
-  const deleteQuery = `DELETE from ${tableName} where rowid = ${id}`;
-  await db.executeSql(deleteQuery);
-};
-
-export const deleteTable = async (db) => {
-  const query = `drop table ${tableName}`;
-
-  await db.executeSql(query);
-};
+      dbCx.transaction(tx => {
+          tx.executeSql(query, [produto.nome, produto.preco, produto.categoria],
+              (tx, resultado) => {
+                  resolve(resultado.rowsAffected > 0);
+              })
+      },
+          error => {
+              console.log(error);
+              resolve(false);
+          }
+      )
+  }
+  );
+}

@@ -1,29 +1,43 @@
-
 import { StyleSheet, Text, TouchableOpacity, View, TextInput, Button, Alert, ScrollView } from 'react-native';
 import React, { useState } from 'react';
-import ProdutoDAO from '../services/database/ProdutoDAO';
+import {createTable, addProduct} from '../services/database/ProdutoDAO';
+import {Picker} from '@react-native-picker/picker';
 
 export default function CadastroProdutos({ navigation }) {
-  const [code, setCode] = useState()
-  const [descricao, setDescricao] = useState('')
-  const [preco, setPreco] = useState()
-
+  const [nome, setNome] = useState('')
+  const [preco, setPreco] = useState(0)
+  const [categoria, setCategoria] = useState()
+  const [selectedOption, setSelectedOption] = useState('');
+  const handleSelectChange = (itemValue) => {
+    setCategoria(itemValue);
+  };
   const saveProduct = async () => {
-    const produto = { code, descricao, preco }
+    const produto = { nome, preco, categoria }
+
 
     try {
-      if (code.length == 0 || descricao.length == 0 || preco.length == 0) {
+      if ( nome.length == 0 || categoria.length == 0) {
         Alert.alert('Error', 'Preencha todos os campos')
         return;
       }
-      const db = ProdutoDAO.getDBConnection();
-      ProdutoDAO.saveProdutos(db, produto)
+      
+      createTable()
+      addProduct(produto)
+      limparCampos()
 
     } catch (error) {
       console.error('Erro salvando produto:', error)
       Alert.alert('Error', 'Erro salvando protudo')
     }
   };
+
+  async function limparCampos() {
+    setNome("");
+    setPreco(0);
+    setCategoria("");
+  }
+
+
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -38,16 +52,9 @@ export default function CadastroProdutos({ navigation }) {
 
         <Text style={styles.legenda}>Cadastro de Produto</Text>
         <TextInput
-          placeholder="Código"
-          inputMode='numeric'
-          value={code}
-          onChangeText={setCode}
-          style={styles.caixaTexto}
-        />
-        <TextInput
-          placeholder="Descrição Produto"
-          value={descricao}
-          onChangeText={setDescricao}
+          placeholder="Nome do Produto"
+          value={nome}
+          onChangeText={setNome}
           style={styles.caixaTexto}
         />
         <TextInput
@@ -57,11 +64,28 @@ export default function CadastroProdutos({ navigation }) {
           onChangeText={setPreco}
           style={styles.caixaTexto}
         />
+          <View>
+      <Text>Selecione uma Categoria:</Text>
+      <Picker
+        selectedValue={categoria}
+        onValueChange={handleSelectChange}
+      >
+        <Picker.Item label="Categoria" value="" />
+        <Picker.Item label="Placa Mãe" value="placaMae" />
+        <Picker.Item label="Processador" value="processador" />
+        <Picker.Item label="GPU" value="gpu" />
+        <Picker.Item label="Memória" value="memoria" />
+      </Picker>
+      {categoria !== '' && (
+        <Text>Você selecionou: {categoria}</Text>
+      )}
+    </View>
+
 
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            saveProduct
+            saveProduct()
           }}
         >
           <Text style={styles.buttonText}>Cadastrar Novo Produto</Text>

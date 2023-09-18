@@ -6,10 +6,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Catalog from '../models/Catalog';
 
 export default function ListarProdutos({ navigation }) {
-  const [code, setCode] = useState()
-  const [descricao, setDescricao] = useState('')
-  const [preco, setPreco] = useState()
-
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 }, [])
@@ -32,7 +28,7 @@ export default function ListarProdutos({ navigation }) {
         </TouchableOpacity>
       </View>
       <View style={styles.nomeLoja}>
-        <TextInput style={styles.nome}>CGS</TextInput>
+        <Text style={styles.nome}>CGS</Text>
       </View>
       <View style={styles.categoria}>
         <Text style={styles.txtcategoria}>Todos</Text>

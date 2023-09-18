@@ -1,23 +1,33 @@
-import React from 'react';
-import { View, FlatList, Text, StyleSheet, Image } from 'react-native';
-
-const products = [
-  { id: '1', name: 'Produto 1', category: 'Placa mae', description: 'Placa mae', unityPrice:'120' },
-  { id: '2', name: 'Produto 2', category: 'Processaor', description: 'Processaor', unityPrice:'120'  },
-  { id: '3', name: 'Produto 3', category: 'GPU', description: 'GPU', unityPrice:'120'  },
-  { id: '4', name: 'Produto 4', category: 'Memoria', description: 'Memoria', unityPrice:'120'  },
-  { id: '5', name: 'Produto 1', category: 'Placa mae', description: 'Placa mae', unityPrice:'120' },
-  { id: '6', name: 'Produto 2', category: 'Processaor', description: 'Processaor', unityPrice:'120'  }
-  // Adicione mais produtos conforme necessário
-];
+import React, { useEffect, useState } from 'react';
+import { View, FlatList, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { getProduct } from '../services/database/ProdutoDAO';
 
 const Catalog = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    getProduct()
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   const renderProduct = ({ item }) => (
     <View style={styles.productContainer}>
       <Image source={require('../assets/ImagemGenerica.jpg')} style={styles.productImage}></Image>
-      <Text style={styles.productName}>{item.name}</Text>
-      <Text style={styles.productDescription}>{item.description}</Text>
-      <Text style={styles.productPrice}>${item.unityPrice}</Text>
+      <Text style={styles.productName}>{item.nome}</Text>
+      <Text style={styles.productDescription}>{item.categoria}</Text>
+      <Text style={styles.productPrice}>${item.preco}</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+        }}
+      >
+        <Text style={styles.buttonText}>Comprar</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -33,6 +43,16 @@ const Catalog = () => {
 };
 
 const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#f4a261',
+    borderRadius: 15,
+    marginTop: 10
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+  },
   container: {
     paddingHorizontal: 16, // Espaçamento horizontal opcional
   },
@@ -44,21 +64,21 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   productName: {
-    marginTop:10,
-    fontSize: 15, 
+    marginTop: 10,
+    fontSize: 15,
     fontWeight: 'bold',
     color: '#e09f3e'
   },
-  productDescription:{
-    fontSize: 15, 
+  productDescription: {
+    fontSize: 15,
     color: 'lightgrey'
   },
-  productPrice:{
-    fontSize: 15, 
+  productPrice: {
+    fontSize: 15,
     fontWeight: 'bold',
     color: '#e09f3e'
   },
-  productImage:{
+  productImage: {
     width: '100%', // Defina a largura da imagem como 100%
     height: 200, // Altura da imagem
     resizeMode: 'cover', // Modo de redimensionamento da imagem

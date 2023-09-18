@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-const CartItem = () => {
+const CartItem = ({carrinho}) => {
     const [cartItems, setCartItems] = useState([
-        { id: '1', name: 'Produto 1', price: 10.99, quantity: 2 },
-        { id: '2', name: 'Produto 2', price: 19.99, quantity: 1 },
-        // Adicione mais produtos ao carrinho conforme necessário
+        setCartItems(carrinho)
     ]);
 
     const calculateTotalPrice = () => {

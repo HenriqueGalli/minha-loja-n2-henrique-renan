@@ -6,6 +6,17 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Catalog from '../models/Catalog';
 
 export default function ComprarProdutos({ navigation }) {
+  const [carrinho, setCarrinho] = useState([]);
+
+  useEffect(() => {
+    // Ignore os logs de aviso específicos, se necessário
+  }, []);
+
+  // Função para adicionar um produto ao carrinho
+  const adicionarAoCarrinho = (produto) => {
+    setCarrinho([...carrinho, produto]);
+  };
+
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 }, [])
@@ -22,7 +33,8 @@ export default function ComprarProdutos({ navigation }) {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            navigation.navigate('Cart')
+            console.log(carrinho)
+            navigation.navigate('Cart', { carrinho })
           }}>
           <Icon name="cart-outline" size={30} style={styles.icon} />
         </TouchableOpacity>
@@ -38,7 +50,7 @@ export default function ComprarProdutos({ navigation }) {
         <Text style={styles.txtcategoria}>Memória</Text>
       </View>
         <View style={styles.catalogo} >
-          <Catalog showBuyButton={true} />
+          <Catalog showBuyButton={true} adicionarAoCarrinho={adicionarAoCarrinho} />
         </View>
     </ScrollView>
 

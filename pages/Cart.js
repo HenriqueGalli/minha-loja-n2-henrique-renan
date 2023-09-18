@@ -5,7 +5,7 @@ import ProdutoDAO from '../services/database/ProdutoDAO';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CartItem from '../models/CartItem';
 
-export default function Cart({ navigation }) {
+export default function Cart({ navigation, carrinho }) {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.header}>
@@ -24,7 +24,7 @@ export default function Cart({ navigation }) {
           <Icon name="cart-outline" size={30} style={styles.icon} />
         </TouchableOpacity>
       </View>
-      <CartItem></CartItem>
+      <CartItem {...carrinho}></CartItem>
     </ScrollView>
   );
 

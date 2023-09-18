@@ -25,6 +25,15 @@ export default function Home({ navigation }) {
                 >
                     <Text style={styles.buttonText}>Listar Produtos</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                        navigation.navigate('ComprarProdutos')
+                    }}
+                >
+                    <Text style={styles.buttonText}>Comprar Produtos</Text>
+                </TouchableOpacity>
             </View>
 
         </View>

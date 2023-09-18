@@ -41,15 +41,15 @@ export default function CadastroProdutos({ navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.button}
+      <TouchableOpacity
+          style={styles.buttonVoltar}
           onPress={() => {
             navigation.navigate('Home')
           }}>
-          <Text style={styles.buttonText}>Cadastrar Novo Produto</Text>
+          <Text style={styles.buttonText}>Voltar</Text>
         </TouchableOpacity>
-
+      <View style={styles.container}>
+      
         <Text style={styles.legenda}>Cadastro de Produto</Text>
         <TextInput
           placeholder="Nome do Produto"
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
   },
   caixaTexto: {
     fontSize: 25,
-    color: 'blue',
     width: 300,
     borderRadius: 10,
     marginBottom: 20,
@@ -133,9 +132,19 @@ const styles = StyleSheet.create({
     flex: 0.5
   },
   button: {
-    backgroundColor: 'red',
+    backgroundColor: '#f4a261',
     margin: 30,
     paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
+  buttonVoltar: {
+    backgroundColor: '#f4a261',
+    margin: 30,
+    justifyContent:'flex-start',
+    alignContent: 'flex-start',
+    paddingVertical: 10,
+    alignItems: 'flex-start',
     paddingHorizontal: 20,
     borderRadius: 15,
   },

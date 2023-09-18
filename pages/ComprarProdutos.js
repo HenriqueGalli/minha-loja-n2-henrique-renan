@@ -5,7 +5,7 @@ import ProdutoDAO from '../services/database/ProdutoDAO';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Catalog from '../models/Catalog';
 
-export default function ListarProdutos({ navigation }) {
+export default function ComprarProdutos({ navigation }) {
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 }, [])
@@ -38,7 +38,7 @@ export default function ListarProdutos({ navigation }) {
         <Text style={styles.txtcategoria}>Memória</Text>
       </View>
         <View style={styles.catalogo} >
-          <Catalog showBuyButton={false} />
+          <Catalog showBuyButton={true} />
         </View>
     </ScrollView>
 

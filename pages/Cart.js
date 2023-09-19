@@ -12,16 +12,10 @@ export default function Cart({ navigation, carrinho }) {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
+            console.log(carrinho)
             navigation.navigate('ListarProdutos')
           }}>
           <Icon name="chevron-back-outline" size={30} style={styles.icon} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navigation.navigate('Cart')
-          }}>
-          <Icon name="cart-outline" size={30} style={styles.icon} />
         </TouchableOpacity>
       </View>
       <CartItem {...carrinho}></CartItem>

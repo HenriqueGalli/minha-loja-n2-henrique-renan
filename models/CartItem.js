@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-const CartItem = ({carrinho}) => {
-    const [cartItems, setCartItems] = useState([
-        setCartItems(carrinho)
-    ]);
-
+const CartItem = (carrinho) => {
+    console.log(carrinho)
+    const [cartItems, setCartItems] = useState([]);
     const calculateTotalPrice = () => {
         return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
     };

@@ -91,6 +91,9 @@ export function addProduct(produto) {
         )
     }
     );
+}
+
+export function editProduct(produto) {
 
     return new Promise((resolve, reject) => {
         let query = 'UPDATE products SET nome=?, preco=?, categoria=? WHERE id=?';

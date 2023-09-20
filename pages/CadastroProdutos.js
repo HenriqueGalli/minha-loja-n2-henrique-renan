@@ -1,33 +1,77 @@
 import { StyleSheet, Text, TouchableOpacity, View, TextInput, Button, Alert, ScrollView } from 'react-native';
-import React, { useState } from 'react';
-import {createTable, addProduct} from '../services/database/ProdutoDAO';
-import {Picker} from '@react-native-picker/picker';
+import React, { useState, useEffect } from 'react';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { createTable, addProduct, editProduct, deleteProduct } from '../services/database/ProdutoDAO';
+import { Picker } from '@react-native-picker/picker';
 
 export default function CadastroProdutos({ navigation }) {
-  const [nome, setNome] = useState('')
-  const [preco, setPreco] = useState(0)
-  const [categoria, setCategoria] = useState()
+
+  const produto = navigation.getParam('produto');
+
+  const [nome, setNome] = useState(produto ? produto.nome : '')
+  const [preco, setPreco] = useState(produto ? produto.preco.toString() : '')
+  const [categoria, setCategoria] = useState(produto ? produto.categoria : '')
+  const [id, setId] = useState(produto ? produto.id : 0)
+  const [isEditing, setIsEditing] = useState(!!produto);
   const [selectedOption, setSelectedOption] = useState('');
   const handleSelectChange = (itemValue) => {
     setCategoria(itemValue);
   };
+
   const saveProduct = async () => {
     const produto = { nome, preco, categoria }
 
 
     try {
-      if ( nome.length == 0 || categoria.length == 0) {
+      if (nome.length == 0 || categoria.length == 0) {
         Alert.alert('Error', 'Preencha todos os campos')
         return;
       }
-      
+
       createTable()
       addProduct(produto)
       limparCampos()
+      Alert.alert('Show!', 'Produto Cadastrado Com Sucesso!')
 
     } catch (error) {
       console.error('Erro salvando produto:', error)
       Alert.alert('Error', 'Erro salvando protudo')
+    }
+  };
+
+  const editProduto = async () => {
+    const produto = { nome, preco, categoria, id }
+
+    try {
+      if (nome.length == 0 || categoria.length == 0) {
+        Alert.alert('Ops', 'Preencha todos os campos')
+        return;
+      }
+
+      editProduct(produto)
+      limparCampos()
+      Alert.alert('Show!', 'Produto Editado Com Sucesso!')
+      navigation.navigate('Home')
+
+    } catch (error) {
+      console.error('Erro editando produto:', error)
+      Alert.alert('Error', 'Erro editando protudo')
+    }
+  };
+
+  const deleteProduto = async () => {
+    const produto = { nome, preco, categoria, id }
+
+    try {
+
+      deleteProduct(produto)
+      limparCampos()
+      Alert.alert('Show!', 'Produto Deletado Com Sucesso')
+      navigation.navigate('Home')
+
+    } catch (error) {
+      console.error('Erro deletando produto:', error)
+      Alert.alert('Error', 'Erro deletando protudo')
     }
   };
 
@@ -42,54 +86,75 @@ export default function CadastroProdutos({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <TouchableOpacity
-          style={styles.buttonVoltar}
-          onPress={() => {
-            navigation.navigate('Home')
-          }}>
-          <Text style={styles.buttonText}>Voltar</Text>
-        </TouchableOpacity>
+        style={styles.header}
+        onPress={() => {
+          navigation.navigate('Home')
+        }}>
+        <Icon name="chevron-back-outline" size={45} style={styles.icon} />
+      </TouchableOpacity>
       <View style={styles.container}>
-      
-        <Text style={styles.legenda}>Cadastro de Produto</Text>
+        
+      {isEditing ? (
+          <Text style={styles.legenda}>Edição de Produto</Text>
+        ) : (
+          <Text style={styles.legenda}>Cadastro de Produto</Text>
+        )}
+        
         <TextInput
           placeholder="Nome do Produto"
           value={nome}
           onChangeText={setNome}
           style={styles.caixaTexto}
+          editable={true}
         />
         <TextInput
           placeholder="Preço Unitário"
-          value={preco}
+          value={preco + ''}
           inputMode='decimal'
           onChangeText={setPreco}
           style={styles.caixaTexto}
+          editable={true}
         />
-          <View>
-      <Text>Selecione uma Categoria:</Text>
-      <Picker
-        selectedValue={categoria}
-        onValueChange={handleSelectChange}
-      >
-        <Picker.Item label="Categoria" value="" />
-        <Picker.Item label="Placa Mãe" value="placaMae" />
-        <Picker.Item label="Processador" value="processador" />
-        <Picker.Item label="GPU" value="gpu" />
-        <Picker.Item label="Memória" value="memoria" />
-      </Picker>
-      {categoria !== '' && (
-        <Text>Você selecionou: {categoria}</Text>
-      )}
-    </View>
+        <View>
+          <Text>Selecione uma Categoria:</Text>
+          <Picker
+            selectedValue={categoria}
+            onValueChange={handleSelectChange}
+            enabled={true}
+          >
+            <Picker.Item label="Categoria" value="" />
+            <Picker.Item label="Placa Mãe" value="placaMae" />
+            <Picker.Item label="Processador" value="processador" />
+            <Picker.Item label="GPU" value="gpu" />
+            <Picker.Item label="Memória" value="memoria" />
+          </Picker>
+          {categoria !== '' && (
+            <Text>Você selecionou: {categoria}</Text>
+          )}
+        </View>
 
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            saveProduct()
-          }}
-        >
-          <Text style={styles.buttonText}>Cadastrar Novo Produto</Text>
-        </TouchableOpacity>
+        {isEditing ? (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={editProduto}
+          >
+            <Text style={styles.buttonText}>Editar</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.button} onPress={saveProduct}>
+            <Text style={styles.buttonText}>Salvar</Text>
+          </TouchableOpacity>
+        )}
+
+        {isEditing ? (
+          <TouchableOpacity
+            style={styles.buttonDelete}
+            onPress={deleteProduto}
+          >
+            <Text style={styles.buttonText}>Excluir Produto</Text>
+          </TouchableOpacity>
+        ) : ("")}
 
       </View>
     </ScrollView>
@@ -97,12 +162,16 @@ export default function CadastroProdutos({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-
+  header: {
+    marginTop: 70,
+    flexDirection: 'row',
+    justifyContent: "space-between",
+    marginRight: 0
+  },
   scrollContainer: {
     backgroundColor: '#FFFFFF',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 0,
+
   },
   container: {
     flex: 0.75,
@@ -128,6 +197,7 @@ const styles = StyleSheet.create({
   },
   legenda: {
     fontSize: 20,
+    margin: 15,
     color: 'black',
     flex: 0.5
   },
@@ -138,15 +208,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 15,
   },
+  buttonDelete: {
+    backgroundColor: 'red',
+    margin: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
   buttonVoltar: {
     backgroundColor: '#f4a261',
     margin: 30,
-    justifyContent:'flex-start',
+    justifyContent: 'flex-start',
     alignContent: 'flex-start',
     paddingVertical: 10,
     alignItems: 'flex-start',
     paddingHorizontal: 20,
     borderRadius: 15,
+  },
+  icon: {
+    color: '#e09f3e'
   },
   buttonText: {
     color: 'white',

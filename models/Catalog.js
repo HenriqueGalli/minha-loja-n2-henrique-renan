@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { getProduct } from '../services/database/ProdutoDAO';
 
-const Catalog = ({ showBuyButton, adicionarAoCarrinho ,filtro }) => {
+const Catalog = ({ showBuyButton, adicionarAoCarrinho, filtro, navigateToCadastroProduto }) => {
   const [products, setProducts] = useState([]);
-
 
   useEffect(() => {
     getProduct(filtro)
@@ -25,14 +24,13 @@ const Catalog = ({ showBuyButton, adicionarAoCarrinho ,filtro }) => {
       <Text style={styles.productName}>{item.nome}</Text>
       <Text style={styles.productDescription}>{item.categoria}</Text>
       <Text style={styles.productPrice}>${item.preco}</Text>
-      {showBuyButton ? ( // Renderiza o botão "Comprar" se showBuyButton for true
+      {showBuyButton ? (  
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
             console.log(filtro)
             adicionarAoCarrinho(item)
             console.log(carrinho)
-            // Lógica para ação de compra
           }}
         >
           <Text style={styles.buttonText}>Add Carrino</Text>
@@ -41,7 +39,7 @@ const Catalog = ({ showBuyButton, adicionarAoCarrinho ,filtro }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            //navigation.navigate('CadastroProduto');
+            navigateToCadastroProduto(item);
           }}
         >
           <Text style={styles.buttonText}>Editar</Text>

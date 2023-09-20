@@ -6,6 +6,7 @@ import Home from './Home';
 import Catalog from '../models/Catalog';
 import ListarProdutos from './ListarProdutos';
 import ComprarProdutos from './ComprarProdutos';
+import ListarVendas from './ListarVendas';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ export default function Navigation() {
         <Stack.Screen name="ListarProdutos" component={ListarProdutos}  />
         <Stack.Screen name="ComprarProdutos" component={ComprarProdutos}  />
         <Stack.Screen name="CadastroProduto" component={CadastroProdutos}/>
+        <Stack.Screen name="ListarVendas" component={ListarVendas}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

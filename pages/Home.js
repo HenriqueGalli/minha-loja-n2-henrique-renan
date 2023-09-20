@@ -42,6 +42,15 @@ export default function Home({ navigation }) {
                 >
                     <Text style={styles.buttonText}>Comprar Produtos</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                        navigation.navigate('ListarVendas')
+                    }}
+                >
+                    <Text style={styles.buttonText}>Listar Vendas</Text>
+                </TouchableOpacity>
             </View>
 
         </View>
@@ -74,7 +83,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#f4a261',
-        margin: 30,
+        margin: 24,
         paddingVertical: 20,
         paddingHorizontal: 30,
         borderRadius: 15,

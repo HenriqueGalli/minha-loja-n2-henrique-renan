@@ -9,7 +9,7 @@ export default function CadastroProdutos({ navigation }) {
   const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
-    // Carrega as categorias quando o componente é montado
+
     loadCategorias();
   }, []);
 
@@ -30,16 +30,16 @@ export default function CadastroProdutos({ navigation }) {
           Alert.alert('Erro', 'Preencha todos os campos');
           return;
         }
-  
+
         await createTable();
-  
+
         const categoria = { nome };
         await addCategoria(categoria);
-  
+
         setNome('');
-  
+
         loadCategorias();
-  
+
         Alert.alert('Sucesso', 'Categoria cadastrada com sucesso');
       } catch (error) {
         console.error('Erro ao salvar categoria:', error);
@@ -49,7 +49,7 @@ export default function CadastroProdutos({ navigation }) {
       updateCategoria(id, nome);
       loadCategorias();
       Alert.alert('Sucesso', 'Categoria editada com sucesso');
-    }    
+    }
     limparCampos()
   };
 
@@ -92,40 +92,57 @@ export default function CadastroProdutos({ navigation }) {
         <Text style={styles.buttonText}>Cadastrar Nova Categoria</Text>
       </TouchableOpacity>
       <Text style={styles.legenda}>Lista de Categorias</Text>
-      <FlatList
-        data={categorias}
-        keyExtractor={(item) => (item.id !== undefined ? item.id.toString() : '')}
-        renderItem={({ item }) => (
-          <View style={styles.categoriaItem}>
-            <Text>{item.nome}</Text>
-            <TouchableOpacity
-              style={styles.actionbutton}
-              onPress={() => {setType('change');  setNome(item.nome); setId(item.id)}}>
-              <Text style={styles.editButtonText}>Editar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionbutton}
-              onPress={() => removerCategoria(item)}>
-              <Text style={styles.deleteButtonText}>Excluir</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+      <View style={styles.categoriasCadastradas}>
+        <FlatList 
+          data={categorias}
+          keyExtractor={(item) => (item.id !== undefined ? item.id.toString() : '')}
+          renderItem={({ item }) => (
+            <View style={styles.categoriaItem}>
+              <View>
+              <Text style={styles.editButtonText}>{item.nome}</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.actionbutton}
+                onPress={() => { setType('change'); setNome(item.nome); setId(item.id) }}>
+                <Text style={styles.editButtonText}>Editar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.actionbutton}
+                onPress={() => removerCategoria(item)}>
+                <Text style={styles.deleteButtonText}>Excluir</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      </View>
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  categoriaItem:{
-    flexDirection:'row'
+  categoriaItem: {
+    flexDirection: 'row',
+    marginTop: 5
   },
-  actionbutton:{
-    marginLeft: 10
+  categoriasCadastradas:{
+    justifyContent: 'center',
+  },
+  actionbutton: {
+    marginLeft: 10,
+    fontSize: 40
+  },
+  editButtonText: {
+    marginLeft: 20,
+    fontSize: 20
+  },
+
+  deleteButtonText: {
+    fontSize: 20
   },
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
     alignItems: 'center',
   },
   buttonVoltar: {

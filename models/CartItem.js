@@ -13,6 +13,8 @@ const CartItem = ({ carrinho}) => {
     const nomesDosProdutos = carrinho.map(carrinho => carrinho.nome);
     const [produto, setNome] = useState(nomesDosProdutos.join(', '));
     const [data, setData] = useState(dataFormatada);
+    const [precoTotal, setPrecoTotal] = useState();
+
     
 
     const calculateTotalPrice = () => {
@@ -20,14 +22,15 @@ const CartItem = ({ carrinho}) => {
     };
 
     const saveVenda = async () => {
-        const venda = { produto, data };
+        const valorFinal = carrinho.reduce((total, item) => total + item.preco, 0).toFixed(2)
+        const venda = { produto, data, valorFinal };
         console.log(venda)
         try {
             await createTable();
             addVenda(venda);
             Alert.alert('Sucesso', 'Venda realizada com sucesso');
         } catch (error) {
-            Alert.alert('Error', 'Errona venda');
+            Alert.alert('Error', 'Erro na venda');
         }
     };
 

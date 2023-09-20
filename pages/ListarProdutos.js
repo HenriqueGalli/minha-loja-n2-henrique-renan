@@ -47,13 +47,7 @@ export default function ListarProdutos({ navigation }) {
           }}>
           <Icon name="chevron-back-outline" size={30} style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navigation.navigate('Cart')
-          }}>
-          <Icon name="cart-outline" size={30} style={styles.icon} />
-        </TouchableOpacity>
+  
       </View>
       <View style={styles.nomeLoja}>
         <Text style={styles.nome}>CGS</Text>

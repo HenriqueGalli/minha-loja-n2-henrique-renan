@@ -1,15 +1,25 @@
 import { StyleSheet, Text, TouchableOpacity, View, TextInput, Button, Alert, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { createTable, addProduct,  } from '../services/database/ProdutoDAO';
-
+import Icon from 'react-native-vector-icons/Ionicons';
+import { createTable, addProduct, editProduct, deleteProduct } from '../services/database/ProdutoDAO';
 import { Picker } from '@react-native-picker/picker';
-import { getCategoria } from '../services/database/CategoriaDAO';
+import { addCategoria, getCategoria, deleteCategoria, updateCategoria } from '../services/database/CategoriaDAO';
+
 
 export default function CadastroProdutos({ navigation }) {
-  const [nome, setNome] = useState('');
-  const [preco, setPreco] = useState(0);
-  const [categoria, setCategoria] = useState('');
+
+  const produto = navigation.getParam('produto');
+
+  const [nome, setNome] = useState(produto ? produto.nome : '')
+  const [preco, setPreco] = useState(produto ? produto.preco.toString() : '')
+  const [categoria, setCategoria] = useState(produto ? produto.categoria : '')
   const [categorias, setCategorias] = useState([]);
+  const [id, setId] = useState(produto ? produto.id : 0)
+  const [isEditing, setIsEditing] = useState(!!produto);
+  const [selectedOption, setSelectedOption] = useState('');
+  const handleSelectChange = (itemValue) => {
+    setCategoria(itemValue);
+  };
 
   useEffect(() => {
     loadCategorias();
@@ -18,7 +28,6 @@ export default function CadastroProdutos({ navigation }) {
   const loadCategorias = () => {
     getCategoria()
       .then((result) => {
-        // Armazena as categorias no estado
         setCategorias(result);
       })
       .catch((error) => {
@@ -27,49 +36,102 @@ export default function CadastroProdutos({ navigation }) {
   };
 
   const saveProduct = async () => {
-    const produto = { nome, preco, categoria };
-    console.log(produto)
+    const produto = { nome, preco, categoria }
+
+
     try {
-      if (nome.length === 0 || categoria.length === 0) {
-        Alert.alert('Error', 'Preencha todos os campos');
+      if (nome.length == 0 || categoria.length == 0) {
+        Alert.alert('Error', 'Preencha todos os campos')
         return;
       }
 
-      await createTable();
-      addProduct(produto);
-      limparCampos();
-      Alert.alert('Sucesso', 'Produto cadastrado com sucesso');
+      createTable()
+      addProduct(produto)
+      limparCampos()
+      Alert.alert('Show!', 'Produto Cadastrado Com Sucesso!')
+
     } catch (error) {
-      console.error('Erro salvando produto:', error);
-      Alert.alert('Error', 'Erro salvando produto');
+      console.error('Erro salvando produto:', error)
+      Alert.alert('Error', 'Erro salvando protudo')
+    }
+  };
+
+  const editProduto = async () => {
+    const produto = { nome, preco, categoria, id }
+
+    try {
+      if (nome.length == 0 || categoria.length == 0) {
+        Alert.alert('Ops', 'Preencha todos os campos')
+        return;
+      }
+
+      editProduct(produto)
+      limparCampos()
+      Alert.alert('Show!', 'Produto Editado Com Sucesso!')
+      navigation.navigate('Home')
+
+    } catch (error) {
+      console.error('Erro editando produto:', error)
+      Alert.alert('Error', 'Erro editando protudo')
+    }
+  };
+
+  const deleteProduto = async () => {
+    const produto = { nome, preco, categoria, id }
+
+    try {
+
+      deleteProduct(produto)
+      limparCampos()
+      Alert.alert('Show!', 'Produto Deletado Com Sucesso')
+      navigation.navigate('Home')
+
+    } catch (error) {
+      console.error('Erro deletando produto:', error)
+      Alert.alert('Error', 'Erro deletando protudo')
     }
   };
 
   async function limparCampos() {
-    setNome('');
+    setNome("");
     setPreco(0);
-    setCategoria('');
+    setCategoria("");
   }
+
+
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <TouchableOpacity
-        style={styles.buttonVoltar}
+        style={styles.header}
         onPress={() => {
-          navigation.navigate('Home');
+          navigation.navigate('Home')
         }}>
-        <Text style={styles.buttonText}>Voltar</Text>
+        <Icon name="chevron-back-outline" size={45} style={styles.icon} />
       </TouchableOpacity>
       <View style={styles.container}>
-        <Text style={styles.legenda}>Cadastro de Produto</Text>
+        
+      {isEditing ? (
+          <Text style={styles.legenda}>Edição de Produto</Text>
+        ) : (
+          <Text style={styles.legenda}>Cadastro de Produto</Text>
+        )}
+        
         <TextInput
           placeholder="Nome do Produto"
           value={nome}
           onChangeText={setNome}
           style={styles.caixaTexto}
+          editable={true}
         />
-        <TextInput placeholder="Preço Unitário" value={preco + ''} inputMode='decimal' onChangeText={setPreco} style={styles.caixaTexto} />
-
+        <TextInput
+          placeholder="Preço Unitário"
+          value={preco + ''}
+          inputMode='decimal'
+          onChangeText={setPreco}
+          style={styles.caixaTexto}
+          editable={true}
+        />
         <View>
           <Text>Selecione uma Categoria:</Text>
           <Picker
@@ -78,33 +140,50 @@ export default function CadastroProdutos({ navigation }) {
             onValueChange={(itemValue) => setCategoria(itemValue)}>
             <Picker.Item label="Categoria" value="" />
             {categorias.map((cat) => (
-              <Picker.Item label={cat.nome1} value={cat.nome1} key={cat.nome1} />
+              <Picker.Item label={cat.nome} value={cat.nome} key={cat.nome} />
             ))}
           </Picker>
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            saveProduct();
-          }}>
-          <Text style={styles.buttonText}>Cadastrar Novo Produto</Text>
-        </TouchableOpacity>
+
+
+        {isEditing ? (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={editProduto}
+          >
+            <Text style={styles.buttonText}>Editar</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.button} onPress={saveProduct}>
+            <Text style={styles.buttonText}>Salvar</Text>
+          </TouchableOpacity>
+        )}
+
+        {isEditing ? (
+          <TouchableOpacity
+            style={styles.buttonDelete}
+            onPress={deleteProduto}
+          >
+            <Text style={styles.buttonText}>Excluir Produto</Text>
+          </TouchableOpacity>
+        ) : ("")}
+
       </View>
     </ScrollView>
   );
 }
 
-
 const styles = StyleSheet.create({
-  picker: {
-    width: 180
+  header: {
+    marginTop: 70,
+    flexDirection: 'row',
+    justifyContent: "space-between",
+    marginRight: 0
   },
-
   scrollContainer: {
     backgroundColor: '#FFFFFF',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 0,
+
   },
   container: {
     flex: 0.75,
@@ -130,11 +209,19 @@ const styles = StyleSheet.create({
   },
   legenda: {
     fontSize: 20,
+    margin: 15,
     color: 'black',
     flex: 0.5
   },
   button: {
     backgroundColor: '#f4a261',
+    margin: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
+  buttonDelete: {
+    backgroundColor: 'red',
     margin: 30,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -149,6 +236,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingHorizontal: 20,
     borderRadius: 15,
+  },
+  icon: {
+    color: '#e09f3e'
   },
   buttonText: {
     color: 'white',

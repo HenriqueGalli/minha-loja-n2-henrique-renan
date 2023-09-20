@@ -2,10 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { getProduct } from '../services/database/ProdutoDAO';
 
-const Catalog = ({ showBuyButton, adicionarAoCarrinho, filtro }) => {
+const Catalog = ({ showBuyButton, adicionarAoCarrinho, filtro, navigateToCadastroProduto }) => {
   const [products, setProducts] = useState([]);
 
-  useEffect(() => { getProduct(filtro).then((data) => { setProducts(data); }).catch((error) => { console.error(error); }); }, []);
+  useEffect(() => {
+    getProduct(filtro)
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const [carrinho, setCarrinho] = useState([]);
+
 
   const renderProduct = ({ item }) => (
     <View style={styles.productContainer}>
@@ -13,12 +24,13 @@ const Catalog = ({ showBuyButton, adicionarAoCarrinho, filtro }) => {
       <Text style={styles.productName}>{item.nome}</Text>
       <Text style={styles.productDescription}>{item.categoria}</Text>
       <Text style={styles.productPrice}>${item.preco}</Text>
-      {showBuyButton ? (
+      {showBuyButton ? (  
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
             console.log(filtro)
             adicionarAoCarrinho(item)
+            console.log(carrinho)
           }}
         >
           <Text style={styles.buttonText}>Add Carrino</Text>
@@ -27,6 +39,7 @@ const Catalog = ({ showBuyButton, adicionarAoCarrinho, filtro }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
+            navigateToCadastroProduto(item);
           }}
         >
           <Text style={styles.buttonText}>Editar</Text>

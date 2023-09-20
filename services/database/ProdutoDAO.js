@@ -13,7 +13,7 @@ export async function createProduto() {
     return new Promise((resolve, reject) => {
         const query = `CREATE TABLE IF NOT EXISTS products
     (
-        id integer not null primary key,
+        id integer primary key AUTOINCREMENT,
         nome text not null,
         preco integer not null,
         categoria text not null          
@@ -23,6 +23,7 @@ export async function createProduto() {
 
         db.transaction(tx => {
             tx.executeSql(query);
+            tx.executeSql('COMMIT');
             resolve(true);
         },
             error => {
@@ -50,12 +51,14 @@ export function getProduct(filtro) {
 
                     for (let n = 0; n < product.rows.length; n++) {
                         let obj = {
+                            id: product.rows.item(n).id,
                             nome: product.rows.item(n).nome,
                             preco: product.rows.item(n).preco,
                             categoria: product.rows.item(n).categoria
                         }
                         retorno.push(obj);
                     }
+                    tx.executeSql('COMMIT');
                     resolve(retorno);
                 })
         },
@@ -77,6 +80,26 @@ export function addProduct(produto) {
         dbCx.transaction(tx => {
             tx.executeSql(query, [produto.nome, produto.preco, produto.categoria],
                 (tx, resultado) => {
+                    tx.executeSql('COMMIT');
+                    resolve(resultado.rowsAffected > 0);
+                })
+        },
+            error => {
+                console.log(error);
+                resolve(false);
+            }
+        )
+    }
+    );
+
+    return new Promise((resolve, reject) => {
+        let query = 'UPDATE products SET nome=?, preco=?, categoria=? WHERE id=?';
+        let dbCx = getDbConnection();
+
+        dbCx.transaction(tx => {
+            tx.executeSql(query, [produto.nome, produto.preco, produto.categoria, produto.id],
+                (tx, resultado) => {
+                    tx.executeSql('COMMIT');
                     resolve(resultado.rowsAffected > 0);
                 })
         },
@@ -88,3 +111,26 @@ export function addProduct(produto) {
     }
     );
 }
+
+export function deleteProduct(produto) {
+
+    return new Promise((resolve, reject) => {
+        let query = 'delete from products WHERE id=?';
+        let dbCx = getDbConnection();
+
+        dbCx.transaction(tx => {
+            tx.executeSql(query, [produto.id],
+                (tx, resultado) => {
+                    tx.executeSql('COMMIT');
+                    resolve(resultado.rowsAffected > 0);
+                })
+        },
+            error => {
+                console.log(error);
+                resolve(false);
+            }
+        )
+    }
+    );
+}
+

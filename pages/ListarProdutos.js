@@ -13,6 +13,11 @@ export default function ListarProdutos({ navigation }) {
 
   const [catalogKey, setCatalogKey] = useState(0);
 
+  const navigateToCadastroProduto = (produto) => {
+    console.log(produto)
+    navigation.navigate('CadastroProdutos', { produto })
+  };
+
   useEffect(() => {
     setCatalogKey(catalogKey + 1);
   }, [filtro]);
@@ -77,7 +82,7 @@ export default function ListarProdutos({ navigation }) {
         </TouchableOpacity>
       </View>
       <View style={styles.catalogo} >
-        <Catalog key={catalogKey} showBuyButton={false} filtro={filtro} />
+        <Catalog key={catalogKey} showBuyButton={false} filtro={filtro} navigateToCadastroProduto={navigateToCadastroProduto} />
       </View>
     </ScrollView>
 

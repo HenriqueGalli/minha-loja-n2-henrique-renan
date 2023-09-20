@@ -6,17 +6,16 @@ export function getDbConnection() {
 }
 
 export async function createTable() {
-    createProduto();
+    createVenda();
 };
 
-export async function createProduto() {
+export async function createVenda() {
     return new Promise((resolve, reject) => {
-        const query = `CREATE TABLE IF NOT EXISTS products
+        const query = `CREATE TABLE IF NOT EXISTS venda
     (
-        id integer not null primary key,
-        nome text not null,
-        preco integer not null,
-        categoria text not null          
+        id integer not null primary key AUTOINCREMENT,
+        produto text not null,
+        data text not null
     )`;
 
         let db = getDbConnection();
@@ -39,20 +38,15 @@ export function getProduct(filtro) {
 
         let dbCx = getDbConnection();
         dbCx.transaction(tx => {
-            if (filtro === 'todos') {
-                query = 'SELECT * FROM products';
-            } else {
-                query = `SELECT * FROM products WHERE categoria = '${filtro}'`;
-            } tx.executeSql(query, [],
+            query = `SELECT * FROM products`;
+            tx.executeSql(query, [],
                 (tx, product) => {
-
                     var retorno = []
-
                     for (let n = 0; n < product.rows.length; n++) {
                         let obj = {
-                            nome: product.rows.item(n).nome,
-                            preco: product.rows.item(n).preco,
-                            categoria: product.rows.item(n).categoria
+                            id: product.rows.item(n).id,
+                            produto: product.rows.item(n).produto,
+                            data: product.rows.item(n).data
                         }
                         retorno.push(obj);
                     }
@@ -68,14 +62,14 @@ export function getProduct(filtro) {
     );
 }
 
-export function addProduct(produto) {
+export function addVenda(venda) {
 
     return new Promise((resolve, reject) => {
-        let query = 'insert into products (nome, preco, categoria) values (?,?,?)';
+        let query = 'insert into venda (produto, data) values (?,?)';
         let dbCx = getDbConnection();
 
         dbCx.transaction(tx => {
-            tx.executeSql(query, [produto.nome, produto.preco, produto.categoria],
+            tx.executeSql(query, [venda.produto, venda.data],
                 (tx, resultado) => {
                     resolve(resultado.rowsAffected > 0);
                 })

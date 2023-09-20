@@ -13,7 +13,7 @@ export async function createCategoria() {
     return new Promise((resolve, reject) => {
         const query = `CREATE TABLE IF NOT EXISTS categoria
     (
-        id integer not null primary key,
+        id integer not null primary key AUTOINCREMENT,
         nome text not null
     )`;
 

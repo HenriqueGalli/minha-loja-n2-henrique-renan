@@ -1,41 +1,50 @@
-
-import { StyleSheet, Text, TouchableOpacity, View, TextInput, Button, Alert, ScrollView, LogBox } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import ProdutoDAO from '../services/database/ProdutoDAO';
+import { View, Text, TouchableOpacity, StyleSheet, LogBox } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { getCategoria } from '../services/database/CategoriaDAO';
 import Catalog from '../models/Catalog';
 
 export default function ComprarProdutos({ navigation }) {
   const [carrinho, setCarrinho] = useState([]);
-
-  const [filtro, setFiltro] = useState('todos')
-
+  const [categorias, setCategorias] = useState([]);
+  const [filtro, setFiltro] = useState('todos');
   const [catalogKey, setCatalogKey] = useState(0);
 
   useEffect(() => {
     setCatalogKey(catalogKey + 1);
   }, [filtro]);
+
+  useEffect(() => {
+    loadCategorias();
+  }, []);
+
+  const loadCategorias = async () => {
+    try {
+      const categorias = await getCategoria();
+      setCategorias(categorias);
+    } catch (error) {
+      console.error('Erro ao carregar categorias:', error);
+    }
+  };
+
   const adicionarAoCarrinho = (produto) => {
     setCarrinho([...carrinho, produto]);
   };
 
-  useEffect(() => {
-    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-  }, [])
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer} >
+    <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            navigation.navigate('Home')
+            navigation.navigate('Home');
           }}>
           <Icon name="chevron-back-outline" size={30} style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            navigation.navigate('Cart', { carrinho })
+            navigation.navigate('Cart', { carrinho });
           }}>
           <Icon name="cart-outline" size={30} style={styles.icon} />
         </TouchableOpacity>
@@ -46,87 +55,62 @@ export default function ComprarProdutos({ navigation }) {
       <View style={styles.categoria}>
         <TouchableOpacity
           onPress={() => {
-            setFiltro("todos")
-          }}
-        >
+            setFiltro('todos');
+          }}>
           <Text style={styles.txtcategoria}>Todos</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setFiltro("placaMae")
-          }}
-        >
-          <Text style={styles.txtcategoria}>Placa mãe</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            setFiltro("processador")
-          }}
-        >
-          <Text style={styles.txtcategoria}>Processador</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setFiltro("gpu")
-          }}
-        >
-          <Text style={styles.txtcategoria}>GPU</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setFiltro("memoria")
-          }}
-        >
-          <Text style={styles.txtcategoria}>Memória</Text>
-        </TouchableOpacity>
+        {categorias.map((cat) => (
+          <TouchableOpacity
+            key={cat.id}
+            onPress={() => {
+              setFiltro(cat.nome);
+            }}>
+            <Text style={styles.txtcategoria}>{cat.nome}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
-      <View style={styles.catalogo} >
+      <View style={styles.catalogo}>
         <Catalog key={catalogKey} showBuyButton={true} filtro={filtro} adicionarAoCarrinho={adicionarAoCarrinho} />
       </View>
-    </ScrollView>
-
+    </View>
   );
-
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1, // Use flex para permitir que o conteúdo seja rolado
+    backgroundColor: '#FFFFFF',
+  },
   header: {
     marginTop: 30,
     flexDirection: 'row',
-    justifyContent: "space-between",
-    marginRight: 10
+    justifyContent: 'space-between',
+    marginRight: 10,
   },
-
   nomeLoja: {
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-
   nome: {
     fontWeight: 'bold',
     fontSize: 25,
-    color: '#e09f3e'
+    color: '#e09f3e',
   },
-
   txtcategoria: {
     fontSize: 15,
     color: '#e09f3e',
     marginRight: 15,
-    marginTop: 5
-
+    marginTop: 5,
   },
-
   categoria: {
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-
   icon: {
-    color: '#e09f3e'
+    color: '#e09f3e',
   },
   catalogo: {
-    marginTop: 20
+    marginTop: 20,
+    marginBottom: 110
   },
-
 });

@@ -1,11 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Alert, } from 'react-native';
+import { createTable, addVenda } from '../services/database/VendaDAO';
 
-const CartItem = ({ carrinho }) => {
-    console.log(carrinho);
+const CartItem = ({ carrinho}) => {
+    const dataAtual = new Date();
+    const dia = dataAtual.getDate().toString().padStart(2, '0');
+    const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0'); 
+    const ano = dataAtual.getFullYear(); // Ano
+    
+    const dataFormatada = `${dia}/${mes}/${ano}`;
+
+    const nomesDosProdutos = carrinho.map(carrinho => carrinho.nome);
+    const [produto, setNome] = useState(nomesDosProdutos.join(', '));
+    const [data, setData] = useState(dataFormatada);
+    
 
     const calculateTotalPrice = () => {
         return carrinho.reduce((total, item) => total + item.preco, 0).toFixed(2);
+    };
+
+    const saveVenda = async () => {
+        const venda = { produto, data };
+        console.log(venda)
+        try {
+            await createTable();
+            addVenda(venda);
+            Alert.alert('Sucesso', 'Venda realizada com sucesso');
+        } catch (error) {
+            Alert.alert('Error', 'Errona venda');
+        }
     };
 
     const renderItem = ({ item }) => (
@@ -34,7 +57,12 @@ const CartItem = ({ carrinho }) => {
                 renderItem={renderItem}
             />
             <Text style={styles.totalCompra}>Total: R$ {calculateTotalPrice()}</Text>
-            <TouchableOpacity style={styles.checkoutButton}>
+            <TouchableOpacity
+                style={styles.checkoutButton}
+                onPress={() => {
+                    saveVenda()
+                }}
+            >
                 <Text style={styles.checkoutText}>Finalizar Compra</Text>
             </TouchableOpacity>
         </View>

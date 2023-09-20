@@ -2,26 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { getProduct } from '../services/database/ProdutoDAO';
 
-const Catalog = ({ showBuyButton, adicionarAoCarrinho ,filtro }) => {
+const Catalog = ({ showBuyButton, adicionarAoCarrinho, filtro }) => {
   const [products, setProducts] = useState([]);
 
-
-  useEffect(() => {
-    loadCategorias();
-  }, []);
-
-  const loadCategorias = () => {
-    getCategorias()
-      .then((result) => {
-        setCategorias(result);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const [carrinho, setCarrinho] = useState([]);
-
+  useEffect(() => { getProduct(filtro).then((data) => { setProducts(data); }).catch((error) => { console.error(error); }); }, []);
 
   const renderProduct = ({ item }) => (
     <View style={styles.productContainer}>
@@ -29,14 +13,12 @@ const Catalog = ({ showBuyButton, adicionarAoCarrinho ,filtro }) => {
       <Text style={styles.productName}>{item.nome}</Text>
       <Text style={styles.productDescription}>{item.categoria}</Text>
       <Text style={styles.productPrice}>${item.preco}</Text>
-      {showBuyButton ? ( // Renderiza o botão "Comprar" se showBuyButton for true
+      {showBuyButton ? (
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
             console.log(filtro)
             adicionarAoCarrinho(item)
-            console.log(carrinho)
-            // Lógica para ação de compra
           }}
         >
           <Text style={styles.buttonText}>Add Carrino</Text>
@@ -45,7 +27,6 @@ const Catalog = ({ showBuyButton, adicionarAoCarrinho ,filtro }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            //navigation.navigate('CadastroProduto');
           }}
         >
           <Text style={styles.buttonText}>Editar</Text>
@@ -58,7 +39,7 @@ const Catalog = ({ showBuyButton, adicionarAoCarrinho ,filtro }) => {
     <FlatList
       data={products}
       keyExtractor={(item) => item.id}
-      numColumns={2} // Define 2 elementos por linha
+      numColumns={2}
       renderItem={renderProduct}
       contentContainerStyle={styles.container}
     />
@@ -77,11 +58,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   container: {
-    paddingHorizontal: 16, // Espaçamento horizontal opcional
+    paddingHorizontal: 16,
   },
   productContainer: {
-    flex: 1, // Cada item ocupa metade da largura
-    margin: 8, // Espaçamento entre os elementos
+    flex: 1,
+    margin: 8,
     padding: 16,
     backgroundColor: '#FEF7FC',
     borderRadius: 8,
@@ -102,10 +83,10 @@ const styles = StyleSheet.create({
     color: '#e09f3e'
   },
   productImage: {
-    width: '100%', // Defina a largura da imagem como 100%
-    height: 200, // Altura da imagem
-    resizeMode: 'cover', // Modo de redimensionamento da imagem
-    borderRadius: 8, // Borda arredondada (opcional)
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 8,
   }
 });
 

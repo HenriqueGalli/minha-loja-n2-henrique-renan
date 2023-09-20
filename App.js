@@ -5,6 +5,7 @@ import CadastroProdutos from './pages/CadastroProdutos';
 import ListarProdutos from './pages/ListarProdutos'
 import ComprarProdutos from './pages/ComprarProdutos'
 import Cart from './pages/Cart'
+import CartItem from './models/CartItem'
 import Catalog from './models/Catalog';
 import CadastroCategoria from './pages/CadastroCategoria';
 
@@ -18,7 +19,8 @@ const Routes = createAppContainer(
     ComprarProdutos,
     Catalog,
     Cart,
-    CadastroCategoria
+    CadastroCategoria,
+    CartItem
   })
 );
 

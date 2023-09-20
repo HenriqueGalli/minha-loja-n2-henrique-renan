@@ -1,7 +1,6 @@
 
 import { StyleSheet, Text, TouchableOpacity, View, TextInput, Button, Alert, ScrollView } from 'react-native';
 import React, { useState } from 'react';
-import ProdutoDAO from '../services/database/ProdutoDAO';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CartItem from '../models/CartItem';
 
@@ -16,6 +15,13 @@ export default function Cart({ navigation }) {
             navigation.navigate('ListarProdutos')
           }}>
           <Icon name="chevron-back-outline" size={30} style={styles.icon} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            navigation.navigate('Home')
+          }}>
+          <Icon name="home" size={30} style={styles.icon} />
         </TouchableOpacity>
       </View>
       <CartItem carrinho={carrinho}></CartItem>

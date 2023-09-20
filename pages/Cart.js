@@ -5,20 +5,20 @@ import ProdutoDAO from '../services/database/ProdutoDAO';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CartItem from '../models/CartItem';
 
-export default function Cart({ navigation, carrinho }) {
-  return (
+export default function Cart({ navigation }) {
+  const carrinho = navigation.getParam('carrinho');
+    return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            console.log(carrinho)
             navigation.navigate('ListarProdutos')
           }}>
           <Icon name="chevron-back-outline" size={30} style={styles.icon} />
         </TouchableOpacity>
       </View>
-      <CartItem {...carrinho}></CartItem>
+      <CartItem carrinho={carrinho}></CartItem>
     </ScrollView>
   );
 

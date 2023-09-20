@@ -35,7 +35,6 @@ export default function ComprarProdutos({ navigation }) {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            console.log(carrinho)
             navigation.navigate('Cart', { carrinho })
           }}>
           <Icon name="cart-outline" size={30} style={styles.icon} />

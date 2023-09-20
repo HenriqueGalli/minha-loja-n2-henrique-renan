@@ -6,6 +6,8 @@ import ListarProdutos from './pages/ListarProdutos'
 import ComprarProdutos from './pages/ComprarProdutos'
 import Cart from './pages/Cart'
 import Catalog from './models/Catalog';
+import CadastroCategoria from './pages/CadastroCategoria';
+
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 
 const Routes = createAppContainer(
@@ -15,7 +17,8 @@ const Routes = createAppContainer(
     ListarProdutos,
     ComprarProdutos,
     Catalog,
-    Cart
+    Cart,
+    CadastroCategoria
   })
 );
 

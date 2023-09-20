@@ -66,7 +66,7 @@ export default function CadastroProdutos({ navigation }) {
         />
           <View>
       <Text>Selecione uma Categoria:</Text>
-      <Picker
+      <Picker style={styles.picker}
         selectedValue={categoria}
         onValueChange={handleSelectChange}
       >
@@ -76,9 +76,6 @@ export default function CadastroProdutos({ navigation }) {
         <Picker.Item label="GPU" value="gpu" />
         <Picker.Item label="Memória" value="memoria" />
       </Picker>
-      {categoria !== '' && (
-        <Text>Você selecionou: {categoria}</Text>
-      )}
     </View>
 
 
@@ -97,6 +94,9 @@ export default function CadastroProdutos({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  picker:{
+    width: 180
+  },  
 
   scrollContainer: {
     backgroundColor: '#FFFFFF',

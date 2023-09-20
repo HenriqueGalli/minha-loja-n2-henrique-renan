@@ -1,29 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-const CartItem = (carrinho) => {
-    console.log(carrinho)
-    const [cartItems, setCartItems] = useState([]);
+const CartItem = ({ carrinho }) => {
+    console.log(carrinho);
+
     const calculateTotalPrice = () => {
-        return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+        return carrinho.reduce((total, item) => total + item.preco, 0).toFixed(2);
     };
 
     const renderItem = ({ item }) => (
         <View style={styles.cartItem}>
             <View style={styles.cartImg}>
-                <Image source={require('../assets/ImagemGenerica.jpg')} style={styles.productImage}></Image>
+                <Image source={require('../assets/ImagemGenerica.jpg')} style={styles.productImage} />
             </View>
             <View style={styles.cartDescription}>
-                <Text style={styles.nomeItem}>{item.name}</Text>
+                <Text style={styles.nomeItem}>{item.nome}</Text>
                 <View style={styles.txtTotal}>
                     <View style={styles.quantidade}>
-                        <Text style={styles.quantidadeTitulo}>Quantidade: </Text>
-                        <Text style={styles.itemQuantidade}>{item.quantity}</Text>
+                        <Text style={styles.quantidadeTitulo}>Categoria: {item.categoria}</Text>
                     </View>
-                    <Text style={styles.precoItem}>${item.price.toFixed(2)}</Text>
+                    <Text style={styles.precoItem}>R$ {item.preco.toFixed(2)}</Text>
                 </View>
             </View>
-
         </View>
     );
 
@@ -31,11 +29,11 @@ const CartItem = (carrinho) => {
         <View style={styles.container}>
             <Text style={styles.title}>Seu Carrinho</Text>
             <FlatList
-                data={cartItems}
-                keyExtractor={(item) => item.id}
+                data={carrinho}
+                keyExtractor={(item, index) => `${item.nome}-${index}`}
                 renderItem={renderItem}
             />
-            <Text style={styles.totalCompra}>Total: ${calculateTotalPrice()}</Text>
+            <Text style={styles.totalCompra}>Total: R$ {calculateTotalPrice()}</Text>
             <TouchableOpacity style={styles.checkoutButton}>
                 <Text style={styles.checkoutText}>Finalizar Compra</Text>
             </TouchableOpacity>
@@ -44,28 +42,24 @@ const CartItem = (carrinho) => {
 };
 
 const styles = StyleSheet.create({
-    quantidadeTitulo:{
+    quantidadeTitulo: {
         fontSize: 15,
         color: 'grey',
     },
-    itemQuantidade:{
-        fontSize: 15,
-        color: '#e09f3e',
-    },
-    quantidade:{
-        flexDirection: 'row'
-    },
-    nomeItem:{
-        fontSize: 15,
-        color: '#e09f3e',
-    },
-    txtTotal:{
+    quantidade: {
         flexDirection: 'row',
     },
-    precoItem:{
+    nomeItem: {
         fontSize: 15,
         color: '#e09f3e',
-        marginLeft: 100
+    },
+    txtTotal: {
+        flexDirection: 'row',
+    },
+    precoItem: {
+        fontSize: 15,
+        color: '#e09f3e',
+        marginLeft: 50,
     },
     container: {
         flex: 1,
@@ -77,7 +71,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         color: '#e09f3e',
         marginLeft: 'auto',
-        marginRight: 'auto'
+        marginRight: 'auto',
     },
     cartItem: {
         marginBottom: 16,
@@ -108,13 +102,13 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     cartDescription: {
-        marginLeft: 30
+        marginLeft: 30,
     },
-    totalCompra:{
-        marginLeft:'auto',
+    totalCompra: {
+        marginLeft: 'auto',
         fontSize: 25,
         color: '#e09f3e',
-    }
+    },
 });
 
 export default CartItem;

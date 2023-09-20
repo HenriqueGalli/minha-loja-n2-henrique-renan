@@ -7,14 +7,18 @@ const Catalog = ({ showBuyButton, adicionarAoCarrinho ,filtro }) => {
 
 
   useEffect(() => {
-    getProduct(filtro)
-      .then((data) => {
-        setProducts(data);
+    loadCategorias();
+  }, []);
+
+  const loadCategorias = () => {
+    getCategorias()
+      .then((result) => {
+        setCategorias(result);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  };
 
   const [carrinho, setCarrinho] = useState([]);
 

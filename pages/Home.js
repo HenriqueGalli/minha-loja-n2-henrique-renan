@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button,TouchableOpacity, StyleSheet, View, Text } from 'react-native';
+import { Button, TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 
 export default function Home({ navigation }) {
     return (
@@ -7,6 +7,14 @@ export default function Home({ navigation }) {
 
             <Text style={styles.legenda}>Lojinha do GCS</Text>
             <View style={styles.botoes}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                        navigation.navigate('CadastroCategoria')
+                    }}
+                >
+                    <Text style={styles.buttonText}>Cadastrar Nova Categoria</Text>
+                </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.button}
@@ -16,7 +24,7 @@ export default function Home({ navigation }) {
                 >
                     <Text style={styles.buttonText}>Cadastrar Novo Produto</Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => {
@@ -57,7 +65,7 @@ const styles = StyleSheet.create({
     },
     botoes: {
         justifyContent: 'space-evenly',
-        marginTop: 100
+        marginTop: 50
     },
     legenda: {
         fontSize: 32,
@@ -66,14 +74,14 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#f4a261',
-        margin:30,
+        margin: 30,
         paddingVertical: 20,
         paddingHorizontal: 30,
         borderRadius: 15,
-      },
-      buttonText: {
+    },
+    buttonText: {
         color: 'white',
         fontSize: 24,
         textAlign: 'center',
-      },
+    },
 });

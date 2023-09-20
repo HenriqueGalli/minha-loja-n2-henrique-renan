@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { getProduct } from '../services/database/ProdutoDAO';
 
-const Catalog = ({ showBuyButton, filtro }) => {
+const Catalog = ({ showBuyButton, adicionarAoCarrinho ,filtro }) => {
   const [products, setProducts] = useState([]);
 
 

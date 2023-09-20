@@ -8,7 +8,15 @@ import Catalog from '../models/Catalog';
 export default function ListarProdutos({ navigation }) {
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-}, [])
+  }, [])
+  const [filtro, setFiltro] = useState('todos')
+
+  const [catalogKey, setCatalogKey] = useState(0);
+
+  useEffect(() => {
+    setCatalogKey(catalogKey + 1);
+  }, [filtro]);
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer} >
       <View style={styles.header}>
@@ -31,15 +39,46 @@ export default function ListarProdutos({ navigation }) {
         <Text style={styles.nome}>CGS</Text>
       </View>
       <View style={styles.categoria}>
-        <Text style={styles.txtcategoria}>Todos</Text>
-        <Text style={styles.txtcategoria}>Placa mãe</Text>
-        <Text style={styles.txtcategoria}>Processador</Text>
-        <Text style={styles.txtcategoria}>GPU</Text>
-        <Text style={styles.txtcategoria}>Memória</Text>
+        <TouchableOpacity
+          onPress={() => {
+            setFiltro("todos")
+          }}
+        >
+          <Text style={styles.txtcategoria}>Todos</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setFiltro("placaMae")
+          }}
+        >
+          <Text style={styles.txtcategoria}>Placa mãe</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            setFiltro("processador")
+          }}
+        >
+          <Text style={styles.txtcategoria}>Processador</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setFiltro("gpu")
+          }}
+        >
+          <Text style={styles.txtcategoria}>GPU</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setFiltro("memoria")
+          }}
+        >
+          <Text style={styles.txtcategoria}>Memória</Text>
+        </TouchableOpacity>
       </View>
-        <View style={styles.catalogo} >
-          <Catalog showBuyButton={false} />
-        </View>
+      <View style={styles.catalogo} >
+        <Catalog key={catalogKey} showBuyButton={false} filtro={filtro} />
+      </View>
     </ScrollView>
 
   );
@@ -68,8 +107,7 @@ const styles = StyleSheet.create({
   txtcategoria: {
     fontSize: 15,
     color: '#e09f3e',
-    marginRight: 'auto',
-    marginLeft: 'auto',
+    marginRight: 15,
     marginTop: 5
 
   },

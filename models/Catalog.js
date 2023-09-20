@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { getProduct } from '../services/database/ProdutoDAO';
 
-const Catalog = ({ showBuyButton, adicionarAoCarrinho }) => {
+const Catalog = ({ showBuyButton, filtro }) => {
   const [products, setProducts] = useState([]);
 
 
   useEffect(() => {
-    getProduct()
+    getProduct(filtro)
       .then((data) => {
         setProducts(data);
       })
@@ -29,9 +29,7 @@ const Catalog = ({ showBuyButton, adicionarAoCarrinho }) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-/*             const novoCarrinho = [...carrinho]
-            novoCarrinho.push(item)
-            setCarrinho(novoCarrinho) */
+            console.log(filtro)
             adicionarAoCarrinho(item)
             console.log(carrinho)
             // Lógica para ação de compra

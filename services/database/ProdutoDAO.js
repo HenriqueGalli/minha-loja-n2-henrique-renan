@@ -33,14 +33,17 @@ export async function createProduto() {
   });
 };
 
-export function getProduct() {
+export function getProduct(filtro) {
 
   return new Promise((resolve, reject) => {
 
       let dbCx = getDbConnection();
       dbCx.transaction(tx => {
-          let query = 'select * from products';
-          tx.executeSql(query, [],
+        if (filtro === 'todos') {
+            query = 'SELECT * FROM products';
+          } else {
+            query = `SELECT * FROM products WHERE categoria = '${filtro}'`;
+          }          tx.executeSql(query, [],
               (tx, product) => {
 
                   var retorno = []

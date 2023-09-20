@@ -4,14 +4,29 @@ import React, { useEffect, useState } from 'react';
 import ProdutoDAO from '../services/database/ProdutoDAO';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Catalog from '../models/Catalog';
+import { getCategoria } from '../services/database/CategoriaDAO';
+
 
 export default function ListarProdutos({ navigation }) {
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, [])
   const [filtro, setFiltro] = useState('todos')
-
+  const [categorias, setCategorias] = useState([]);
   const [catalogKey, setCatalogKey] = useState(0);
+
+  useEffect(() => {
+    loadCategorias();
+  }, []);
+
+  const loadCategorias = async () => {
+    try {
+      const categorias = await getCategoria();
+      setCategorias(categorias);
+    } catch (error) {
+      console.error('Erro ao carregar categorias:', error);
+    }
+  };
 
   const navigateToCadastroProduto = (produto) => {
     console.log(produto)
@@ -51,35 +66,15 @@ export default function ListarProdutos({ navigation }) {
         >
           <Text style={styles.txtcategoria}>Todos</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setFiltro("placaMae")
-          }}
-        >
-          <Text style={styles.txtcategoria}>Placa mãe</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            setFiltro("processador")
-          }}
-        >
-          <Text style={styles.txtcategoria}>Processador</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setFiltro("gpu")
-          }}
-        >
-          <Text style={styles.txtcategoria}>GPU</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setFiltro("memoria")
-          }}
-        >
-          <Text style={styles.txtcategoria}>Memória</Text>
-        </TouchableOpacity>
+        {categorias.map((cat) => (
+          <TouchableOpacity
+            key={cat.id}
+            onPress={() => {
+              setFiltro(cat.nome);
+            }}>
+            <Text style={styles.txtcategoria}>{cat.nome}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
       <View style={styles.catalogo} >
         <Catalog key={catalogKey} showBuyButton={false} filtro={filtro} navigateToCadastroProduto={navigateToCadastroProduto} />
